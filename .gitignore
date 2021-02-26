@@ -1,0 +1,17 @@
+
+#OS-specific fi
+.DS_Store
+*.db
+
+#NPM and Yarn related files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#Project excludes
+build/
+dist/
+
+# WebStorm
+.idea
