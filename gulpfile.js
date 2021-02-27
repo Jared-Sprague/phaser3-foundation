@@ -8,6 +8,10 @@ const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser');
 const path = require('path');
 const browserSync = require('browser-sync').create();
+const argv = require('yargs').argv;
+const gulpif = require('gulp-if');
+const tap = require('gulp-tap');
+const replace = require('gulp-string-replace');
 
 const paths = {
     phaser: './node_modules/phaser/dist/',
@@ -43,11 +47,17 @@ gulp.task('scripts', () => {
         .bundle()
         .pipe(source(paths.game.dest))
         .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(terser())
-        .pipe(sourcemaps.write('./source-maps'))
+        .pipe(gulpif(!isProduction(), sourcemaps.init({ loadMaps: true })))
+        .pipe(gulpif(isProduction(), terser()))
+        .pipe(gulpif(!isProduction(), sourcemaps.write('./source-maps')))
         .pipe(gulp.dest(paths.script.dest));
 });
+
+async function indexHtmlFilter(file, t) {
+    if (isProduction()) {
+        return t.through(replace, ['phaser.js', 'phaser.min.js']);
+    }
+}
 
 async function clean() {
     del([paths.build]);
@@ -55,6 +65,7 @@ async function clean() {
 
 async function copyHTML() {
     gulp.src([paths.base + '/index.html'])
+        .pipe(tap(indexHtmlFilter))
         .pipe(gulp.dest(paths.build));
 }
 
@@ -64,7 +75,9 @@ async function copyAssets() {
 }
 
 async function copyPhaser() {
-    gulp.src(paths.phaser + '/phaser.min.js')
+    const phaserFile = isProduction() ? '/phaser.min.js' : '/phaser.js';
+
+    gulp.src(paths.phaser + phaserFile)
         .pipe(gulp.dest(paths.script.dest));
 }
 
@@ -88,6 +101,10 @@ async function serve() {
             files  : './dist/**/*.*',
         },
     });
+}
+
+function isProduction() {
+    return argv.production;
 }
 
 gulp.task('reload', reload);
