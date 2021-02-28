@@ -1,6 +1,8 @@
 /* global Phaser */
+import config from '../config';
 
 const consola = require('consola').withTag('PreloadScene');
+consola.level = config.LOG_LEVEL;
 
 export default class PreloadScene extends Phaser.Scene {
 
@@ -9,7 +11,7 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        consola.info('Loading assets..');
+        consola.trace('Loading assets..');
         this.load.spritesheet('fullscreen', '../assets/images/fullscreen-white.png', { frameWidth: 64, frameHeight: 64 });
     }
 

@@ -53,9 +53,15 @@ gulp.task('scripts', () => {
         .pipe(gulp.dest(paths.script.dest));
 });
 
-async function indexHtmlFilter(file, t) {
+async function indexHtmlPhaserScript(file, t) {
     if (isProduction()) {
         return t.through(replace, ['phaser.js', 'phaser.min.js']);
+    }
+}
+
+async function indexHtmlSetEnv(file, t) {
+    if (isProduction()) {
+        return t.through(replace, ["ENV = 'dev'", "ENV = 'prod'"]);
     }
 }
 
@@ -65,7 +71,8 @@ async function clean() {
 
 async function copyHTML() {
     gulp.src([paths.base + '/index.html'])
-        .pipe(tap(indexHtmlFilter))
+        .pipe(tap(indexHtmlPhaserScript))
+        .pipe(tap(indexHtmlSetEnv))
         .pipe(gulp.dest(paths.build));
 }
 
