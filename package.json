@@ -6,9 +6,11 @@
     "description": "Phaser 3 ES6+ foundation with Gulp, babel, eslint, browser-sync",
     "main": "src/js/Game.js",
     "scripts": {
-        "build-dev": "gulp build-watch-serve",
-        "build": "gulp build --production",
         "start": "npm run build-dev",
+        "clean": "gulp clean",
+        "build-dev": "gulp build-watch-serve",
+        "build-prod": "gulp build --production",
+        "serve": "gulp serve",
         "eslint": "eslint ./src --ext .js",
         "eslint-fix": "eslint --fix ./src --ext .js"
     },
