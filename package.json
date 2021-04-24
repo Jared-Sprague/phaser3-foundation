@@ -39,6 +39,6 @@
     },
     "dependencies": {
         "consola": "^2.15.3",
-        "phaser": "^3.52.0"
+        "phaser": "^3.54.0"
     }
 }
